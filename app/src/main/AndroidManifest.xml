@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- REQUIRED FOR ANDROID 11+ PACKAGE VISIBILITY -->
+    <queries>
+        <package android:name="com.ss.popuplauncher" />
+    </queries>
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
