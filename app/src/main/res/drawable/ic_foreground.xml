@@ -1,0 +1,67 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Group centered inside the 108dp adaptive icon safe-zone -->
+    <group
+        android:translateX="18"
+        android:translateY="18">
+
+        <!-- Outer Ball Line -->
+        <path
+            android:fillColor="#00000000"
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="1.8"
+            android:pathData="M 36,2 A 34,34 0 1 1 35.9,2 Z" />
+
+        <!-- Inner Edge Outline Line -->
+        <path
+            android:fillColor="#00000000"
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="1.2"
+            android:pathData="M 36,6 A 30,30 0 1 1 35.9,6 Z" />
+
+        <!-- Top Right Crescent Reflection Arc -->
+        <path
+            android:fillColor="#00000000"
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="1.5"
+            android:strokeLineCap="round"
+            android:pathData="M 48,13 A 22,22 0 0 1 59,24" />
+
+        <!-- Star 1 (Top Right Outline) -->
+        <path
+            android:fillColor="#00000000"
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="1.4"
+            android:strokeLineJoin="round"
+            android:pathData="M 43,18 L 45.2,23 L 50.5,23 L 46.2,26.2 L 47.8,31.2 L 43,28 L 38.2,31.2 L 39.8,26.2 L 35.5,23 L 40.8,23 Z" />
+
+        <!-- Star 2 (Left Outline) -->
+        <path
+            android:fillColor="#00000000"
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="1.4"
+            android:strokeLineJoin="round"
+            android:pathData="M 23,28 L 25.2,33 L 30.5,33 L 26.2,36.2 L 27.8,41.2 L 23,38 L 18.2,41.2 L 19.8,36.2 L 15.5,33 L 20.8,33 Z" />
+
+        <!-- Star 3 (Bottom Center Outline) -->
+        <path
+            android:fillColor="#00000000"
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="1.4"
+            android:strokeLineJoin="round"
+            android:pathData="M 31,44 L 33.2,49 L 38.5,49 L 34.2,52.2 L 35.8,57.2 L 31,54 L 26.2,57.2 L 27.8,52.2 L 23.5,49 L 28.8,49 Z" />
+
+        <!-- Star 4 (Right Outline) -->
+        <path
+            android:fillColor="#00000000"
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="1.4"
+            android:strokeLineJoin="round"
+            android:pathData="M 50,38 L 52.2,43 L 57.5,43 L 53.2,46.2 L 54.8,51.2 L 50,48 L 45.2,51.2 L 46.8,46.2 L 42.5,43 L 47.8,43 Z" />
+
+    </group>
+</vector>
