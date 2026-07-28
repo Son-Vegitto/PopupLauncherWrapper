@@ -38,6 +38,8 @@ jobs:
       - name: Sign Release APK
         uses: r0adkll/sign-android-release@v1
         id: sign_app
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0"
         with:
           releaseDirectory: app/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
@@ -46,15 +48,14 @@ jobs:
           keyPassword: mypassword
         continue-on-error: true
 
-      - name: Fallback Sign with apksigner if needed
+      - name: Fallback Sign with apksigner
         run: |
           BUILD_TOOLS_DIR=$(ls -d $ANDROID_HOME/build-tools/* | tail -n 1)
-          $BUILD_TOOLS_DIR/apksigner sign --ks app/release.keystore --ks-pass pass:mypassword app/build/outputs/apk/release/app-release-unsigned.apk || \
-          $BUILD_TOOLS_DIR/apksigner sign --ks app/release.keystore --ks-pass pass:mypassword app/build/outputs/apk/release/app-release.apk
+          APK_PATH=$(find app/build/outputs/apk/release/ -name "*.apk" | head -n 1)
+          $BUILD_TOOLS_DIR/apksigner sign --ks app/release.keystore --ks-pass pass:mypassword "$APK_PATH"
 
       - name: Upload Signed APK
         uses: actions/upload-artifact@v4
         with:
           name: PopupLauncher-Signed-APK
           path: app/build/outputs/apk/release/*.apk
-          
