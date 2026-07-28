@@ -20,7 +20,7 @@ jobs:
           gradle-version: '8.2'
           cache-disabled: true
 
-      - name: Build Release APK
+      - name: Build Unsigned Release APK
         run: gradle assembleRelease
 
       - name: Generate Release Keystore
@@ -35,27 +35,30 @@ jobs:
             -keypass mypassword \
             -dname "CN=PopupLauncher, OU=Dev, O=Self, L=City, S=State, C=US"
 
-      - name: Sign Release APK
-        uses: r0adkll/sign-android-release@v1
-        id: sign_app
-        env:
-          BUILD_TOOLS_VERSION: "34.0.0"
-        with:
-          releaseDirectory: app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: mykeyalias
-          keyStorePassword: mypassword
-          keyPassword: mypassword
-        continue-on-error: true
-
-      - name: Fallback Sign with apksigner
+      - name: Align and Sign APK
         run: |
-          BUILD_TOOLS_DIR=$(ls -d $ANDROID_HOME/build-tools/* | tail -n 1)
-          APK_PATH=$(find app/build/outputs/apk/release/ -name "*.apk" | head -n 1)
-          $BUILD_TOOLS_DIR/apksigner sign --ks app/release.keystore --ks-pass pass:mypassword "$APK_PATH"
+          # Locate build tools directory dynamically
+          BUILD_TOOLS=$(ls -d $ANDROID_HOME/build-tools/* | tail -n 1)
+          
+          # Paths for raw build and final output
+          INPUT_APK=$(find app/build/outputs/apk/release/ -name "*.apk" | head -n 1)
+          ALIGNED_APK="app/build/outputs/apk/release/PopupLauncher-aligned.apk"
+          FINAL_APK="app/build/outputs/apk/release/PopupLauncher-Signed.apk"
+          
+          # Zipalign the APK first (required before signing)
+          $BUILD_TOOLS/zipalign -v 4 "$INPUT_APK" "$ALIGNED_APK"
+          
+          # Sign using apksigner with the generated keystore
+          $BUILD_TOOLS/apksigner sign --ks app/release.keystore \
+            --ks-pass pass:mypassword \
+            --ks-key-alias mykeyalias \
+            --key-pass pass:mypassword \
+            --out "$FINAL_APK" \
+            "$ALIGNED_APK"
 
       - name: Upload Signed APK
         uses: actions/upload-artifact@v4
         with:
           name: PopupLauncher-Signed-APK
-          path: app/build/outputs/apk/release/*.apk
+          path: app/build/outputs/apk/release/PopupLauncher-Signed.apk
+          
