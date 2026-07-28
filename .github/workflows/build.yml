@@ -20,12 +20,41 @@ jobs:
           gradle-version: '8.2'
           cache-disabled: true
 
-      - name: Build Debug APK
-        run: gradle assembleDebug
+      - name: Build Release APK
+        run: gradle assembleRelease
 
-      - name: Upload APK
+      - name: Generate Release Keystore
+        run: |
+          keytool -genkeypair -v \
+            -keystore app/release.keystore \
+            -alias mykeyalias \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass mypassword \
+            -keypass mypassword \
+            -dname "CN=PopupLauncher, OU=Dev, O=Self, L=City, S=State, C=US"
+
+      - name: Sign Release APK
+        uses: r0adkll/sign-android-release@v1
+        id: sign_app
+        with:
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: mykeyalias
+          keyStorePassword: mypassword
+          keyPassword: mypassword
+        continue-on-error: true
+
+      - name: Fallback Sign with apksigner if needed
+        run: |
+          BUILD_TOOLS_DIR=$(ls -d $ANDROID_HOME/build-tools/* | tail -n 1)
+          $BUILD_TOOLS_DIR/apksigner sign --ks app/release.keystore --ks-pass pass:mypassword app/build/outputs/apk/release/app-release-unsigned.apk || \
+          $BUILD_TOOLS_DIR/apksigner sign --ks app/release.keystore --ks-pass pass:mypassword app/build/outputs/apk/release/app-release.apk
+
+      - name: Upload Signed APK
         uses: actions/upload-artifact@v4
         with:
-          name: PopupLauncher-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: PopupLauncher-Signed-APK
+          path: app/build/outputs/apk/release/*.apk
           
